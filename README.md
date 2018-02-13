@@ -38,6 +38,6 @@ It validates the following items:
 
 You may run this script directly from GitHub with the commands below:
 ```
-$CsAdPrepCheck = Invoke-WebRequest https://raw.githubusercontent.com/argiesen/CsScript/master/Invoke-CsAdPrepCheck.ps1
+$CsAdPrepCheck = Invoke-WebRequest https://raw.githubusercontent.com/argiesen/CsScripts/master/Invoke-CsAdPrepCheck.ps1
 Invoke-Expression $($CsAdPrepCheck.Content)
 ```
