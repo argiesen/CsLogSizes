@@ -6,7 +6,7 @@
 
 #$VerbosePreference = 'Continue'
 $FinalOutput = @()
-$services = Get-CsService | where {($_.Role -like '*Registrar*') -or ($_.Role -like '*MediationServer*') -or ($_.Role -like '*PersistentChatServer*') -and ($_.Version -ge 6)}
+$services = Get-CsService | Where-Object {($_.Role -like '*Registrar*') -or ($_.Role -like '*MediationServer*') -or ($_.Role -like '*PersistentChatServer*') -and ($_.Version -ge 6)}
 foreach ($service in $services){$computers += Get-CsPool $service.PoolFqdn | Select-Object -ExpandProperty Computers}
 $computers | ForEach-Object -Process {
 	Write-Verbose -Message "Testing $_"

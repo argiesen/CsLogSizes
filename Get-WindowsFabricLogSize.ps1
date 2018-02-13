@@ -7,7 +7,7 @@
 
 #$VerbosePreference = 'Continue'
 $FinalOutput = @()
-$registrars = Get-CsService -Registrar | where {$_.Version -ge 5}
+$registrars = Get-CsService -Registrar | Where-Object {$_.Version -ge 5}
 foreach ($registrar in $registrars){$computers += Get-CsPool $registrar.PoolFqdn | Select-Object -ExpandProperty Computers}
 $computers | ForEach-Object -Process {
 	Write-Verbose -Message "Testing $_"
