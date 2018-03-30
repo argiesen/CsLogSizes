@@ -31,11 +31,9 @@ foreach ($Server in $csServers){
 			$hotfixId = "KB2533623"
 		}
 	}else{
-		#$drives = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {Get-CimInstance Win32_Volume -Filter 'DriveType = 3' | Where-Object DriveLetter -ne $null | Select-Object @{l='FreeSpaceGB';e={$_.FreeSpace/1GB}}}
 		$drives = Get-CimInstance Win32_Volume -ComputerName $Server.ServerName -Filter 'DriveType = 3' | Where-Object DriveLetter -ne $null | Select-Object @{l='FreeSpaceGB';e={$_.FreeSpace/1GB}}
 		$psVersion = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {$PSVersionTable.BuildVersion}
 		$Server.SQLVersion = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {(Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\* | Where-Object {$_.ParentDisplayName -eq "Microsoft SQL Server 2012 (64-bit)" -and $_.ReleaseType -eq "ServicePack"}).DisplayVersion}
-		#$osVersion = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {(Get-CimInstance -Class Win32_OperatingSystem).Caption}
 		$osVersion = (Get-CimInstance Win32_OperatingSystem -ComputerName $Server.ServerName).Caption
 		$lrsApplication = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {Get-WebApplication lrs -ErrorAction SilentlyContinue}
 		
@@ -43,15 +41,12 @@ foreach ($Server in $csServers){
 		#Windows Server 2012 - KB2858668
 		#Windows Server 2012 R2 - KB2982006
 		if ($osVersion -match "Server 2012 R2"){
-			#$hotfix = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {Get-Hotfix KB2982006 -ErrorAction SilentlyContinue}
 			$hotfix = Get-Hotfix KB2982006 -ComputerName $Server.ServerName -ErrorAction SilentlyContinue
 			$hotfixId = "KB2982006"
 		}elseif ($osVersion -match "Server 2012"){
-			#$hotfix = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {Get-Hotfix KB2858668 -ErrorAction SilentlyContinue}
 			$hotfix = Get-Hotfix KB2858668 -ComputerName $Server.ServerName -ErrorAction SilentlyContinue
 			$hotfixId = "KB2858668"
 		}elseif ($osVersion -match "Server 2008 R2"){
-			#$hotfix = Invoke-Command -ComputerName $Server.ServerName -ScriptBlock {Get-Hotfix KB2533623 -ErrorAction SilentlyContinue}
 			$hotfix = Get-Hotfix KB2533623 -ComputerName $Server.ServerName -ErrorAction SilentlyContinue
 			$hotfixId = "KB2533623"
 		}
@@ -111,7 +106,5 @@ foreach ($Server in $csServers){
 	$Server.Messages = ($Messages | Out-String).Trim()
 }
 
-
-#$csServers | Format-Table -AutoSize
 $csServers | Format-List
 $csServers | Export-Csv SfBPrereqs.csv -NoTypeInformation
