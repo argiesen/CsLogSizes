@@ -1,3 +1,7 @@
+param (
+	[string]$OutputFile
+)
+
 $csServers = @()
 try {
 	$csPool = Get-CsPool | Where-Object Computers -match ([System.Net.Dns]::GetHostByName((hostname)).HostName)
@@ -107,4 +111,6 @@ foreach ($Server in $csServers){
 }
 
 $csServers | Format-List
-$csServers | Export-Csv SfBPrereqs.csv -NoTypeInformation
+if ($OutputFile){
+	$csServers | Export-Csv $OutputFile -NoTypeInformation
+}
